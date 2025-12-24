@@ -1,6 +1,6 @@
 # LUMEN // ICARUS SAVE EDITOR
 
-![LUMEN EDITOR INTERFACE](grafik.png)
+![LUMEN EDITOR INTERFACE](https://i.imgur.com/qTPgFzd.png)
 
 ## // SYSTEM OVERVIEW
 
