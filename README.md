@@ -39,8 +39,6 @@ Advanced Level and Experience Point (XP) calculator with bi-directional synchron
 ### **INTERFACE: LUMEN ELITE UI**
 Custom-engineered GUI matching the internal ICARUS "Dark Olive" aesthetic for seamless integration with existing UAC terminals.
 
-![GAMEPLAY COMPARISON](Icarus-Win64-Shipping_hRmTKDTDiV.jpg)
-
 ---
 
 ## // DEPLOYMENT INSTRUCTIONS
