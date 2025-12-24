@@ -10,6 +10,19 @@ This software operates outside the standard UAC protocols, allowing for the modi
 
 ---
 
+## // SECURITY & ANTIVIRUS NOTE
+
+> **FALSE POSITIVE WARNING:** Some antivirus software (including VirusTotal scans) may flag `LUMEN.exe` as generic malware.
+
+**This is a known false positive caused by PyInstaller.**
+Because this tool is a standalone executable built from Python scripts without a digital signature, heuristics engines often misidentify it.
+
+* **VERIFICATION:** The full source code is available in this repository (`LUMEN.py`) for inspection.
+* **ACTION:** If your antivirus blocks the file, please add an **Exclusion/Exception** for `LUMEN.exe`.
+* **SAFETY:** This tool operates entirely locally and makes no network connections other than scanning your local file system for save data.
+
+---
+
 ## // OPERATIONAL CAPABILITIES
 
 ### [ 1 ] CURRENCY MANAGEMENT
