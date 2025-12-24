@@ -19,6 +19,7 @@ Direct injection and modification of all orbital exchange currencies.
 * **STABILIZED EXOTICS:** Red exotic matter allocation.
 * **LEGENDARY BIOMASS:** Biological resource management.
 * **LEGENDARY LICENSE:** Permit allocation.
+* **RESPEC POINTS:** Refund point allocation for talent unlearning.
 
 ### [ 2 ] PROGRESSION MATRIX
 Advanced Level and Experience Point (XP) calculator with bi-directional synchronization.
@@ -26,14 +27,8 @@ Advanced Level and Experience Point (XP) calculator with bi-directional synchron
 * **XP CALCULATOR:** Input raw XP -> System derives current Level.
 * **VISUAL INDICATOR:** Live progress bar tracking current level threshold completion.
 
-### [ 3 ] AUTOMATED POINT ALLOCATION
-The system bypasses standard progression locks by automatically calculating available points based on the set Level.
-* **TALENT POINTS:** Auto-filled based on Level.
-* **SOLO TALENT POINTS:** Auto-filled based on Level.
-* **BLUEPRINT (TECH) POINTS:** Auto-filled based on Level.
-
-### [ 4 ] PROFILE INTERFACE
-* **AUTO-SCAN:** Automatically detects SteamID and local save paths (`%localappdata%\Icarus\Saved\PlayerData`).
+### [ 3 ] PROFILE INTERFACE
+* **AUTO-SCAN:** Automatically detects SteamID and local save paths (`AppData\%localappdata%\Icarus\Saved\PlayerData`).
 * **MANUAL OVERRIDE:** Directory browsing for non-standard installations.
 * **MULTI-PROFILE:** Dropdown selector for multiple Steam accounts.
 
@@ -50,24 +45,13 @@ Custom-engineered GUI matching the internal ICARUS "Dark Olive" aesthetic for se
 
 ## // DEPLOYMENT INSTRUCTIONS
 
-### **OPTION A: EXECUTABLE (RECOMMENDED)**
-1.  Download the latest `LUMEN.exe` release.
-2.  Ensure *ICARUS* is fully terminated (Process ID: 0).
-3.  Run `LUMEN.exe` as Administrator.
-4.  Select Profile ID or Browse manually.
-5.  Modify values.
+### **EXECUTABLE LAUNCH**
+1.  Download the latest **`LUMEN.exe`** release.
+2.  **Game State:** It is **recommended** to close *ICARUS* completely. However, simply returning to the **Character Selection Menu** is sufficient for changes to take effect.
+3.  Run **`LUMEN.exe`** as Administrator.
+4.  Select your Profile ID from the dropdown (or Browse manually).
+5.  Modify your desired values.
 6.  Click **[ SAVE & APPLY ]**.
-
-### **OPTION B: PYTHON SOURCE**
-1.  Ensure **Python 3.11+** is installed.
-2.  Install dependencies:
-    ```bash
-    pip install customtkinter
-    ```
-3.  Launch the script:
-    ```bash
-    python LUMEN.py
-    ```
 
 ---
 
@@ -75,8 +59,8 @@ Custom-engineered GUI matching the internal ICARUS "Dark Olive" aesthetic for se
 
 | ERROR MESSAGE | CAUSE | SOLUTION |
 | :--- | :--- | :--- |
-| **"File is locked"** | The game client is currently running. | Terminate *ICARUS* and retry the save operation. |
-| **"No Profile Detected"** | Non-standard installation path. | Use the **[ BROWSE ]** button to locate the numbered folder inside `Local\Icarus\Saved\PlayerData\`. |
+| **"File is locked"** | The game client is currently writing to the file. | Return to the **Character Select Menu** or fully terminate *ICARUS* and retry. |
+| **"No Profile Detected"** | Non-standard installation path. | Use the **[ BROWSE ]** button to locate the numbered folder inside `AppData\Local\Icarus\Saved\PlayerData\`. |
 
 ---
 
