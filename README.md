@@ -51,9 +51,9 @@ Custom-engineered GUI matching the internal ICARUS "Dark Olive" aesthetic for se
 ## // DEPLOYMENT INSTRUCTIONS
 
 ### **OPTION A: EXECUTABLE (RECOMMENDED)**
-1.  Download the latest `LumenEditor.exe` release.
+1.  Download the latest `LUMEN.exe` release.
 2.  Ensure *ICARUS* is fully terminated (Process ID: 0).
-3.  Run `LumenEditor.exe` as Administrator.
+3.  Run `LUMEN.exe` as Administrator.
 4.  Select Profile ID or Browse manually.
 5.  Modify values.
 6.  Click **[ SAVE & APPLY ]**.
@@ -66,7 +66,7 @@ Custom-engineered GUI matching the internal ICARUS "Dark Olive" aesthetic for se
     ```
 3.  Launch the script:
     ```bash
-    python IcarusGUI.py
+    python LUMEN.py
     ```
 
 ---
@@ -84,6 +84,6 @@ Custom-engineered GUI matching the internal ICARUS "Dark Olive" aesthetic for se
 
 > **WARNING:** This tool modifies local data files. While safety protocols (backups) are implemented, usage is at the operator's own risk. Always backup your `PlayerData` folder before engaging experimental software.
 
-* **DEVELOPER:** [YOUR NAME]
-* **VERSION:** FINAL // ELITE
+* **DEVELOPER:** Yivani
+* **VERSION:** v1.0
 * **STATUS:** ACTIVE
