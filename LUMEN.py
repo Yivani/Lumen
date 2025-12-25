@@ -78,11 +78,11 @@ class LumenIcarusEditor(ctk.CTk):
         self.profile_data = {}
         
         # --- CHARACTER DATA ---
-        self.char_root_container = None    # The full JSON object from Characters.json
-        self.char_list_ref = None          # Reference to the list of characters within root
-        self.parsed_chars = []             # List of dicts: {'obj': dict, 'is_encoded': bool, 'is_nested': bool}
+        self.char_root_container = None    
+        self.char_list_ref = None          
+        self.parsed_chars = []             
         self.active_char_index = -1
-        self.char_frame = None             # Frame for character specific widgets
+        self.char_frame = None            
         
         self.entries = {}
         self.xp_entry_ref = None
@@ -188,10 +188,6 @@ class LumenIcarusEditor(ctk.CTk):
             text_color=COL_TEXT_LIGHT
         )
         self.tab_view.pack(pady=10, padx=20, fill="both", expand=True)
-        
-        # Access the internal segmented button to apply specific text color settings if needed
-        # or simply rely on the better corner radius and colors above.
-        # Customizing the font for the tabs:
         self.tab_view._segmented_button.configure(font=("Impact", 18), text_color_disabled=COL_BORDER)
         
         self.editor_tab = self.tab_view.add("EDITOR")
@@ -217,7 +213,6 @@ class LumenIcarusEditor(ctk.CTk):
 
     def create_settings_ui(self):
         """Create the UI elements for the Settings tab."""
-        # Scrollable content
         content = ctk.CTkScrollableFrame(self.settings_tab, fg_color="transparent")
         content.pack(fill="both", expand=True, padx=30, pady=20)
         
@@ -228,7 +223,6 @@ class LumenIcarusEditor(ctk.CTk):
         ctk.CTkLabel(backup_header, text="BACKUP", font=("Arial", 16, "bold"), text_color=COL_TEXT_LIGHT).pack(side="left", padx=10)
         ctk.CTkFrame(content, height=1, fg_color=COL_BORDER, corner_radius=0).pack(fill="x", pady=(0, 15))
         
-        # Backup Location
         ctk.CTkLabel(content, text="BACKUP LOCATION", font=("Arial", 12, "bold"), text_color=COL_ACCENT_GOLD).pack(anchor="w", pady=(0, 5))
         
         self.path_frame = ctk.CTkFrame(content, fg_color=COL_BG_PANEL, border_width=1, border_color=COL_BORDER)
@@ -239,7 +233,6 @@ class LumenIcarusEditor(ctk.CTk):
         
         ctk.CTkButton(self.path_frame, text="CHANGE", command=self.change_backup_folder, width=80, height=30, fg_color=COL_BG_INPUT, hover_color=COL_BORDER, text_color=COL_TEXT_LIGHT).pack(side="right", padx=10, pady=10)
         
-        # Backup Retention Limit
         ctk.CTkLabel(content, text="BACKUP RETENTION", font=("Arial", 12, "bold"), text_color=COL_ACCENT_GOLD).pack(anchor="w", pady=(0, 5))
         
         retention_frame = ctk.CTkFrame(content, fg_color=COL_BG_PANEL, border_width=1, border_color=COL_BORDER)
@@ -248,7 +241,6 @@ class LumenIcarusEditor(ctk.CTk):
         retention_content = ctk.CTkFrame(retention_frame, fg_color="transparent")
         retention_content.pack(fill="x", padx=20, pady=12)
         
-        # Header row
         header_row = ctk.CTkFrame(retention_content, fg_color="transparent")
         header_row.pack(fill="x", pady=(0, 6))
         
@@ -262,7 +254,6 @@ class LumenIcarusEditor(ctk.CTk):
         )
         self.max_backups_label.pack(padx=10, pady=4)
         
-        # Slider row with min/max labels
         slider_row = ctk.CTkFrame(retention_content, fg_color="transparent")
         slider_row.pack(fill="x", pady=(0, 4))
         
@@ -279,10 +270,8 @@ class LumenIcarusEditor(ctk.CTk):
         
         ctk.CTkLabel(slider_row, text="50", font=("Arial", 10), text_color=COL_BORDER).pack(side="left", padx=(10, 0))
         
-        # Description
         ctk.CTkLabel(retention_content, text="Oldest backups are automatically deleted when limit is exceeded", font=("Arial", 10), text_color=COL_BORDER).pack(anchor="w", pady=(2, 0))
         
-        # Backup Tools
         tools_frame = ctk.CTkFrame(content, fg_color="transparent")
         tools_frame.pack(fill="x", pady=(0, 30))
         
@@ -296,7 +285,6 @@ class LumenIcarusEditor(ctk.CTk):
         ctk.CTkLabel(settings_header, text="IMPORTANT SETTINGS", font=("Arial", 16, "bold"), text_color=COL_TEXT_LIGHT).pack(side="left", padx=10)
         ctk.CTkFrame(content, height=1, fg_color=COL_BORDER, corner_radius=0).pack(fill="x", pady=(0, 15))
         
-        # Steam Cloud Guard
         ctk.CTkLabel(content, text="STEAM CLOUD GUARD", font=("Arial", 12, "bold"), text_color=COL_ACCENT_GOLD).pack(anchor="w", pady=(0, 5))
         
         steam_frame = ctk.CTkFrame(content, fg_color=COL_BG_PANEL, border_width=1, border_color=COL_BORDER)
@@ -308,7 +296,6 @@ class LumenIcarusEditor(ctk.CTk):
         ctk.CTkLabel(steam_content, text="⚠ WARNING: Disable Steam Cloud Sync before saving!", font=("Arial", 12, "bold"), text_color=C_RED).pack(anchor="w", pady=(0, 5))
         ctk.CTkLabel(steam_content, text="Steam Cloud may overwrite manual JSON edits. Disable it in:\nSteam → Library → Right-click Icarus → Properties → General → Steam Cloud", font=("Arial", 11), text_color=COL_BORDER, justify="left").pack(anchor="w")
         
-        # Close on Launch
         ctk.CTkLabel(content, text="CLOSE ON LAUNCH", font=("Arial", 12, "bold"), text_color=COL_ACCENT_GOLD).pack(anchor="w", pady=(0, 5))
         
         close_frame = ctk.CTkFrame(content, fg_color=COL_BG_PANEL, border_width=1, border_color=COL_BORDER)
@@ -317,28 +304,23 @@ class LumenIcarusEditor(ctk.CTk):
         close_content = ctk.CTkFrame(close_frame, fg_color="transparent")
         close_content.pack(fill="x", padx=20, pady=20)
         
-        # Main toggle row
         toggle_row = ctk.CTkFrame(close_content, fg_color="transparent")
         toggle_row.pack(fill="x", pady=(0, 10))
         
-        # Left side: Label
         label_frame = ctk.CTkFrame(toggle_row, fg_color="transparent")
         label_frame.pack(side="left", fill="x", expand=True)
         ctk.CTkLabel(label_frame, text="Close Editor when Game Starts", font=("Arial", 12, "bold"), text_color=COL_TEXT_LIGHT).pack(anchor="w")
         ctk.CTkLabel(label_frame, text="Automatically close the editor after launching Icarus", font=("Arial", 10), text_color=COL_BORDER).pack(anchor="w", pady=(2, 0))
         
-        # Right side: Toggle switch with status indicator
         switch_frame = ctk.CTkFrame(toggle_row, fg_color="transparent")
         switch_frame.pack(side="right", padx=(20, 0))
         
-        # Status indicator
         self.close_status_label = ctk.CTkLabel(
             switch_frame, text="OFF", font=("Arial", 10, "bold"),
             text_color=COL_BORDER, width=40
         )
         self.close_status_label.pack(side="right", padx=(0, 10))
         
-        # Toggle switch with custom styling
         self.close_on_launch_switch = ctk.CTkSwitch(
             switch_frame, text="", command=self.toggle_close_on_launch,
             onvalue=True, offvalue=False, width=60, height=28,
@@ -347,7 +329,6 @@ class LumenIcarusEditor(ctk.CTk):
         )
         self.close_on_launch_switch.pack(side="right")
         
-        # Set initial state
         if self.config.get("close_on_launch", False):
             self.close_on_launch_switch.select()
             self.close_status_label.configure(text="ON", text_color=C_BIO)
@@ -355,7 +336,6 @@ class LumenIcarusEditor(ctk.CTk):
             self.close_on_launch_switch.deselect()
             self.close_status_label.configure(text="OFF", text_color=COL_BORDER)
         
-        # JSON Integrity Check
         ctk.CTkLabel(content, text="JSON INTEGRITY CHECK", font=("Arial", 12, "bold"), text_color=COL_ACCENT_GOLD).pack(anchor="w", pady=(0, 5))
         
         validate_frame = ctk.CTkFrame(content, fg_color="transparent")
@@ -372,7 +352,6 @@ class LumenIcarusEditor(ctk.CTk):
         
         errors = []
         
-        # Validate Profile.json
         p_path = os.path.join(self.current_folder_path, 'Profile.json')
         if os.path.exists(p_path):
             try:
@@ -383,7 +362,6 @@ class LumenIcarusEditor(ctk.CTk):
         else:
             errors.append("Profile.json: File not found")
         
-        # Validate Characters.json
         c_path = os.path.join(self.current_folder_path, 'Characters.json')
         if os.path.exists(c_path):
             try:
@@ -412,7 +390,6 @@ class LumenIcarusEditor(ctk.CTk):
         self.config["close_on_launch"] = is_enabled
         self.save_config()
         
-        # Update status label
         if is_enabled:
             self.close_status_label.configure(text="ON", text_color=C_BIO)
         else:
@@ -427,25 +404,20 @@ class LumenIcarusEditor(ctk.CTk):
         max_backups = self.config.get("max_backups", 10)
         
         try:
-            # Get all backup folders
             backup_folders = []
             for item in os.listdir(backup_base):
                 full_path = os.path.join(backup_base, item)
                 if os.path.isdir(full_path) and item.startswith("Backup_"):
-                    # Extract timestamp from folder name (Backup_YYYY-MM-DD_HH-MM-SS)
                     try:
                         timestamp_str = item.replace("Backup_", "")
                         timestamp = datetime.strptime(timestamp_str, "%Y-%m-%d_%H-%M-%S")
                         backup_folders.append((timestamp, full_path, item))
                     except:
-                        # If timestamp parsing fails, use file modification time
                         mtime = os.path.getmtime(full_path)
                         backup_folders.append((datetime.fromtimestamp(mtime), full_path, item))
             
-            # Sort by timestamp (oldest first)
             backup_folders.sort(key=lambda x: x[0])
             
-            # Delete oldest if we would exceed limit after creating new backup
             if len(backup_folders) >= max_backups:
                 to_delete = len(backup_folders) - max_backups + 1  # +1 to make room for new backup
                 deleted_count = 0
@@ -480,9 +452,6 @@ class LumenIcarusEditor(ctk.CTk):
         path = self.config.get("backup_path")
         if not path or not os.path.exists(path): return
         
-        # Simple confirmation dialog (using ThemePopup as a hacky confirm or just a warning)
-        # Ideally, we'd have a Yes/No dialog, but for now we'll just do it with a notification after.
-        # Let's delete subfolders starting with "Backup_"
         try:
             count = 0
             for item in os.listdir(path):
@@ -544,7 +513,6 @@ class LumenIcarusEditor(ctk.CTk):
         """Switch the active character and refresh the character UI section."""
         if not self.parsed_chars: return
         
-        # Find selected character index
         selected_idx = 0
         for i, char_data in enumerate(self.parsed_chars):
             name = char_data['obj'].get('CharacterName', 'UNKNOWN').upper()
@@ -559,15 +527,12 @@ class LumenIcarusEditor(ctk.CTk):
         """Render the stats/level manager for the currently active character."""
         if self.active_char_index < 0 or self.active_char_index >= len(self.parsed_chars): return
         
-        # Create container frame if not exists
         if self.char_frame is None:
             self.char_frame = ctk.CTkFrame(self.frame, fg_color="transparent")
             self.char_frame.pack(fill="x", padx=0, pady=0)
         
-        # Clear existing character widgets
         for widget in self.char_frame.winfo_children(): widget.destroy()
         
-        # Clean up old character entries from self.entries to avoid conflicts
         keys_to_remove = [k for k in self.entries.keys() if k.startswith("CHAR|")]
         for k in keys_to_remove: del self.entries[k]
 
@@ -575,14 +540,11 @@ class LumenIcarusEditor(ctk.CTk):
         char_obj = char_data['obj']
         name = char_obj.get("CharacterName", "UNKNOWN").upper()
         
-        # Add Header
-        # Re-using add_section_header logic but targeting self.char_frame
         container = ctk.CTkFrame(self.char_frame, fg_color="transparent")
         container.pack(fill="x", pady=(25, 5), padx=30)
         ctk.CTkFrame(container, width=3, height=18, fg_color=COL_ACCENT_GOLD, corner_radius=0).pack(side="left")
         ctk.CTkLabel(container, text=f"CHARACTER: {name}", font=("Arial", 16, "bold"), text_color=COL_TEXT_LIGHT).pack(side="left", padx=10)
         
-        # Character Selection Dropdown (right-aligned)
         if self.parsed_chars:
             char_names = [c['obj'].get('CharacterName', 'UNKNOWN').upper() for c in self.parsed_chars]
             sel_container = ctk.CTkFrame(container, fg_color="transparent")
@@ -599,12 +561,10 @@ class LumenIcarusEditor(ctk.CTk):
         
         ctk.CTkFrame(self.char_frame, height=1, fg_color=COL_BORDER, corner_radius=0).pack(fill="x", padx=30, pady=0)
 
-        # Add Revive Manager
         is_dead = char_obj.get("IsDead", False)
         is_abandoned = char_obj.get("IsAbandoned", False)
         self.add_revive_manager(is_dead, is_abandoned, parent=self.char_frame)
         
-        # Add Level Manager
         current_xp = char_obj.get("XP", 0)
         current_xp_debt = char_obj.get("XP_Debt", 0)
         self.add_level_manager(current_xp, current_xp_debt, "CHAR", parent=self.char_frame)
@@ -623,7 +583,6 @@ class LumenIcarusEditor(ctk.CTk):
         content = ctk.CTkFrame(container, fg_color="transparent")
         content.pack(fill="x", padx=15, pady=(0, 15))
         
-        # Status display
         status_parts = []
         if is_dead:
             status_parts.append("DEAD")
@@ -635,7 +594,6 @@ class LumenIcarusEditor(ctk.CTk):
         status_label = ctk.CTkLabel(content, text=f"Status: {status_text}", font=("Consolas", 14), text_color=status_color)
         status_label.pack(side="left", padx=(0, 20))
         
-        # Revive button
         def revive_character():
             if self.active_char_index < 0 or self.active_char_index >= len(self.parsed_chars):
                 self.show_message("ERROR", "No character selected!", "#FF5555")
@@ -651,11 +609,9 @@ class LumenIcarusEditor(ctk.CTk):
                 self.show_message("ALREADY ALIVE", "Character is already alive and not abandoned.", COL_ACCENT_GOLD)
                 return
             
-            # Update character object
             char_obj["IsDead"] = False
             char_obj["IsAbandoned"] = False
             
-            # Save immediately
             c_path = os.path.join(self.current_folder_path, 'Characters.json')
             if not os.path.exists(c_path):
                 self.show_message("ERROR", "Characters.json not found!", "#FF5555")
@@ -664,12 +620,10 @@ class LumenIcarusEditor(ctk.CTk):
             try:
                 shutil.copy(c_path, c_path + ".backup")
                 
-                # Re-serialize
                 final_element = char_obj
                 if char_data['is_encoded']:
                     final_element = json.dumps(char_obj)
                 
-                # Put back into list
                 if char_data['is_nested']:
                     self.char_list_ref[self.active_char_index][0] = final_element
                 else:
@@ -678,7 +632,6 @@ class LumenIcarusEditor(ctk.CTk):
                 with open(c_path, 'w', encoding='utf-8') as f:
                     json.dump(self.char_root_container, f, indent=4)
                 
-                # Update UI
                 status_label.configure(text="Status: ALIVE", text_color=C_BIO)
                 self.status_label.configure(text="CHARACTER REVIVED & RESCUED", text_color=C_BIO)
                 
@@ -706,15 +659,12 @@ class LumenIcarusEditor(ctk.CTk):
         head.pack(fill="x", padx=15, pady=(5, 2))
         ctk.CTkLabel(head, text="LEVEL MANAGER", font=("Arial", 11, "bold"), text_color=COL_ACCENT_GOLD).pack(side="left")
         
-        # Main content frame (no tabview needed)
         content_frame = ctk.CTkFrame(container, fg_color=COL_BG_PANEL, corner_radius=2)
         content_frame.pack(fill="both", padx=10, pady=(0, 10))
         
-        # --- CALCULATOR CONTROLS ---
         controls = ctk.CTkFrame(content_frame, fg_color="transparent")
         controls.pack(fill="x", padx=10, pady=(10, 0))
         
-        # Top row: Input fields
         input_row = ctk.CTkFrame(controls, fg_color="transparent")
         input_row.pack(fill="x", pady=(0, 8))
         
@@ -752,38 +702,30 @@ class LumenIcarusEditor(ctk.CTk):
             self.update_progress_visuals(softcap_xp)
             self.status_label.configure(text="SET TO LEVEL 50 SOFT-CAP", text_color=COL_ACCENT_GOLD)
         
-        # Prestige / Preset section with XP Debt on the right
         preset_header = ctk.CTkFrame(controls, fg_color="transparent")
         preset_header.pack(fill="x", pady=(10, 2))
         ctk.CTkLabel(preset_header, text="PRESTIGE TOOLS", font=("Arial", 9, "bold"), text_color=COL_ACCENT_GOLD).pack(side="left")
         ctk.CTkLabel(preset_header, text="(Keeps talents & blueprints)", font=("Arial", 8), text_color=COL_BORDER).pack(side="left", padx=(8, 0))
-        
-        # XP Debt header on the right
         ctk.CTkLabel(preset_header, text="XP DEBT", font=("Arial", 9, "bold"), text_color=C_RED).pack(side="right")
         
         presets_row = ctk.CTkFrame(controls, fg_color="transparent")
         presets_row.pack(fill="x", pady=(0, 0))
         
-        # Prestige buttons on the left
         prestige_left = ctk.CTkFrame(presets_row, fg_color="transparent")
         prestige_left.pack(side="left")
         ctk.CTkButton(prestige_left, text="SOFT-RESET (LVL 1)", command=reset_to_zero, width=130, height=28, corner_radius=2, fg_color=C_RED, hover_color="#b52200", text_color=COL_TEXT_DARK, font=("Arial", 10, "bold")).pack(side="left", padx=(0, 6))
         ctk.CTkButton(prestige_left, text="SOFT-CAP (LVL 50)", command=set_softcap, width=130, height=28, corner_radius=2, fg_color=C_BIO, hover_color="#008f62", text_color=COL_TEXT_DARK, font=("Arial", 10, "bold")).pack(side="left")
         
-        # XP Debt content on the right
         debt_content = ctk.CTkFrame(presets_row, fg_color="transparent")
         debt_content.pack(side="right")
         
-        # Current debt display
         debt_label = ctk.CTkLabel(debt_content, text=f"Debt: {current_xp_debt}", font=("Consolas", 11), text_color=COL_TEXT_LIGHT)
         debt_label.pack(side="left", padx=(0, 8))
         
-        # Hidden entry to store XP_Debt value (for saving)
         xp_debt_entry = ctk.CTkEntry(debt_content, width=0, height=0, fg_color=COL_BG_INPUT, border_width=0)
         xp_debt_entry.insert(0, str(current_xp_debt))
         self.entries[f"{section}|XP_Debt"] = xp_debt_entry
         
-        # Clear button
         def clear_debt():
             xp_debt_entry.delete(0, "end")
             xp_debt_entry.insert(0, "0")
@@ -801,7 +743,6 @@ class LumenIcarusEditor(ctk.CTk):
         self.progress_bar_ref.pack(fill="x")
         self.update_progress_visuals(current_xp)
         
-        # Calculate and display current level based on loaded XP
         try:
             lvl_calc = self._get_level_for_xp(current_xp)
             self.lvl_entry_ref.delete(0, "end")
@@ -819,7 +760,7 @@ class LumenIcarusEditor(ctk.CTk):
         if lvl <= 50:
             return int(1570 * (lvl ** 2))
         else:
-            base_50 = 3925000  # XP required for level 50
+            base_50 = 3925000
             extra_levels = lvl - 50
             return int(base_50 + (extra_levels * 144000))
 
@@ -834,7 +775,7 @@ class LumenIcarusEditor(ctk.CTk):
             val = int(math.sqrt(xp / 1570))
             return val if val > 0 else 1
         else:
-            base_50 = 3925000  # XP required for level 50
+            base_50 = 3925000
             diff = xp - base_50
             extra_levels = int(diff / 144000)
             return 50 + extra_levels
@@ -847,7 +788,7 @@ class LumenIcarusEditor(ctk.CTk):
         try:
             lvl = int(self.lvl_entry_ref.get())
             if lvl < 1: lvl = 1
-            if lvl > 150: lvl = 150  # Cap at 150 just in case, though game goes higher
+            if lvl > 150: lvl = 150
             
             new_xp = self._get_xp_for_level(lvl)
             
@@ -887,7 +828,6 @@ class LumenIcarusEditor(ctk.CTk):
             progress_val = (current_xp - xp_start_of_lvl) / range_span
             progress_val = max(0.0, min(1.0, progress_val))
             
-            # Reset and then set to ensure proper display
             self.progress_bar_ref.set(0)
             self.progress_bar_ref.update_idletasks()
             self.progress_bar_ref.set(progress_val)
@@ -995,7 +935,6 @@ class LumenIcarusEditor(ctk.CTk):
                 
             if not os.path.exists(backup_base): os.makedirs(backup_base)
             
-            # Cleanup old backups BEFORE creating new one (to maintain exact limit)
             self.cleanup_old_backups()
             
             ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -1027,23 +966,18 @@ class LumenIcarusEditor(ctk.CTk):
             if self.char_root_container is not None and os.path.exists(c_path) and self.active_char_index >= 0:
                 shutil.copy(c_path, c_path + ".backup")
                 
-                # Get current active char data wrapper
                 char_data = self.parsed_chars[self.active_char_index]
                 char_obj = char_data['obj']
                 
-                # Apply changes from UI to the object
-                # Note: Manual XP entries are saved exactly as typed (supports modded XP curves)
                 for key_full, entry in list(self.entries.items()):
                     section, r_key = key_full.split("|")
                     if section == "CHAR":
-                        try: char_obj[r_key] = int(entry.get())  # Saves exact value from entry field
+                        try: char_obj[r_key] = int(entry.get())
                         except: pass
                 
-                # Re-serialize
                 final_element = char_obj
                 if char_data['is_encoded']: final_element = json.dumps(char_obj)
                 
-                # Put back into list
                 if char_data['is_nested']:
                     self.char_list_ref[self.active_char_index][0] = final_element
                 else:
@@ -1062,7 +996,6 @@ class LumenIcarusEditor(ctk.CTk):
             return
         
         try:
-            # Attempt to save data
             # --- SAFETY SYSTEM: AUTO-BACKUP ---
             backup_base = self.config.get("backup_path")
             if not backup_base:
@@ -1103,23 +1036,18 @@ class LumenIcarusEditor(ctk.CTk):
             if self.char_root_container is not None and os.path.exists(c_path) and self.active_char_index >= 0:
                 shutil.copy(c_path, c_path + ".backup")
                 
-                # Get current active char data wrapper
                 char_data = self.parsed_chars[self.active_char_index]
                 char_obj = char_data['obj']
                 
-                # Apply changes from UI to the object
-                # Note: Manual XP entries are saved exactly as typed (supports modded XP curves)
                 for key_full, entry in list(self.entries.items()):
                     section, r_key = key_full.split("|")
                     if section == "CHAR":
-                        try: char_obj[r_key] = int(entry.get())  # Saves exact value from entry field
+                        try: char_obj[r_key] = int(entry.get())
                         except: pass
                 
-                # Re-serialize
                 final_element = char_obj
                 if char_data['is_encoded']: final_element = json.dumps(char_obj)
                 
-                # Put back into list
                 if char_data['is_nested']:
                     self.char_list_ref[self.active_char_index][0] = final_element
                 else:
@@ -1127,13 +1055,11 @@ class LumenIcarusEditor(ctk.CTk):
                     
                 with open(c_path, 'w', encoding='utf-8') as f: json.dump(self.char_root_container, f, indent=4)
             
-            # Save successful, launch game
             self.status_label.configure(text="SAVED & LAUNCHING...", text_color=C_BIO)
             os.startfile("steam://rungameid/1149460")
             
-            # Check if close on launch is enabled
             if self.config.get("close_on_launch", False):
-                self.after(1000, self.destroy)  # Small delay to ensure save completes
+                self.after(1000, self.destroy)
             else:
                 self.show_message("LAUNCHING", "Data saved successfully!\n\nLaunching Icarus via Steam...", C_BIO)
             

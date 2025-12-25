@@ -39,11 +39,31 @@ Advanced Level and Experience Point (XP) calculator with bi-directional synchron
 * **LEVEL CALCULATOR:** Input desired Level -> System calculates required XP.
 * **XP CALCULATOR:** Input raw XP -> System derives current Level.
 * **VISUAL INDICATOR:** Live progress bar tracking current level threshold completion.
+* **XP DEBT MANAGEMENT:** Clear XP debt with a single click.
+* **PRESTIGE TOOLS:** Soft-reset to Level 1 or set to Level 50 soft-cap while preserving talents and blueprints.
 
-### [ 3 ] PROFILE INTERFACE
+### [ 3 ] CHARACTER MANAGEMENT
+* **REVIVE & RESCUE:** Revive dead characters and rescue abandoned characters with one-click functionality.
+* **CHARACTER SELECTOR:** Easy dropdown selection for multiple characters.
+* **MULTI-CHARACTER SUPPORT:** Edit any character in your save file.
+
+### [ 4 ] PROFILE INTERFACE
 * **AUTO-SCAN:** Automatically detects SteamID and local save paths (`AppData\%localappdata%\Icarus\Saved\PlayerData`).
 * **MANUAL OVERRIDE:** Directory browsing for non-standard installations.
 * **MULTI-PROFILE:** Dropdown selector for multiple Steam accounts.
+
+### [ 5 ] STEAM INTEGRATION
+* **SAVE & LAUNCH:** One-click button to save your changes and launch Icarus via Steam.
+* **CLOSE ON LAUNCH:** Optional toggle to automatically close the editor when launching the game.
+
+### [ 6 ] BACKUP SYSTEM
+* **AUTO-BACKUP:** Automatic backup creation before every save operation.
+* **BACKUP RETENTION:** Configurable limit (5-50 backups) with automatic cleanup of oldest backups.
+* **BACKUP MANAGEMENT:** Open backup folder or delete all backups with dedicated tools.
+
+### [ 7 ] DATA VALIDATION
+* **JSON INTEGRITY CHECK:** Validate Profile.json and Characters.json for syntax errors before saving.
+* **ERROR DETECTION:** Identifies and reports JSON parsing errors to prevent corrupted saves.
 
 ---
 
@@ -62,7 +82,14 @@ Custom-engineered GUI matching the internal ICARUS "Dark Olive" aesthetic for se
 3.  Run **`LUMEN.exe`** as Administrator.
 4.  Select your Profile ID from the dropdown (or Browse manually).
 5.  Modify your desired values.
-6.  Click **[ SAVE & APPLY ]**.
+6.  Click **[ SAVE & APPLY ]** or **[ SAVE & LAUNCH GAME ]** to save and optionally launch Icarus.
+
+### **SETTINGS TAB**
+Access advanced settings via the **SETTINGS** tab:
+* **Backup Location:** Configure where backups are stored.
+* **Backup Retention:** Set maximum number of backups to keep (5-50).
+* **Close on Launch:** Toggle automatic editor closure when launching the game.
+* **JSON Validation:** Validate save files for syntax errors before saving.
 
 ---
 
@@ -80,5 +107,5 @@ Custom-engineered GUI matching the internal ICARUS "Dark Olive" aesthetic for se
 > **WARNING:** This tool modifies local data files. While safety protocols (backups) are implemented, usage is at the operator's own risk. Always backup your `PlayerData` folder before engaging experimental software.
 
 * **DEVELOPER:** Yivani
-* **VERSION:** v1.0
+* **VERSION:** v2.0
 * **STATUS:** ACTIVE
