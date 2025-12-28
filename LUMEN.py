@@ -37,16 +37,15 @@ ctk.set_default_color_theme("dark-blue")
 class ThemePopup(ctk.CTkToplevel):
     def __init__(self, title, message, color=COL_ACCENT_GOLD):
         super().__init__()
-        self.geometry("420x240")
-        self.overrideredirect(True) 
+        self.overrideredirect(True)
+        self.attributes("-topmost", True)
         self.configure(fg_color=COL_BG_ROOT)
-        self.update_idletasks()
+        # Calculate position before setting geometry for better performance
         ws = self.winfo_screenwidth()
         hs = self.winfo_screenheight()
-        x = (ws/2) - (420/2)
-        y = (hs/2) - (240/2)
-        self.geometry('%dx%d+%d+%d' % (420, 240, x, y))
-        self.attributes("-topmost", True)
+        x = (ws - 420) // 2
+        y = (hs - 240) // 2
+        self.geometry(f'420x240+{x}+{y}')
         main_frame = ctk.CTkFrame(self, fg_color=COL_BG_PANEL, border_width=2, border_color=color, corner_radius=0)
         main_frame.pack(fill="both", expand=True, padx=2, pady=2)
         ctk.CTkLabel(main_frame, text=title.upper(), font=("Impact", 24), text_color=color).pack(pady=(25, 10))
@@ -57,7 +56,7 @@ class ThemePopup(ctk.CTkToplevel):
 class LumenIcarusEditor(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("LUMEN EDITOR [v1.0]")
+        self.title("LUMEN EDITOR [v2.0]")
         w, h = 850, 1125
         ws, hs = self.winfo_screenwidth(), self.winfo_screenheight()
         self.geometry(f"{w}x{h}+{int((ws/2)-(w/2))}+{int((hs/2)-(h/2))}")
@@ -96,15 +95,16 @@ class LumenIcarusEditor(ctk.CTk):
         self.settings_tab = None
         
         self.create_widgets()
+        # Defer profile loading to after() to improve initial window display speed
         if self.profiles_map:
-            first_id = list(self.profiles_map.keys())[0]
+            first_id = next(iter(self.profiles_map.keys()))  # Faster than list conversion
             self.profile_dropdown.set(first_id)
-            self.change_profile(first_id)
+            self.after(100, lambda: self.change_profile(first_id))  # Defer loading
         else:
             self.status_label.configure(text="NO PROFILE - SELECT MANUALLY", text_color="#FF5555")
             self.btn_save.configure(state="disabled")
             self.btn_save_launch.configure(state="disabled")
-            self.show_message("NO PROFILE FOUND", "Could not auto-detect profiles.\nPlease click [ BROWSE ] and select your PlayerData folder manually.", "#FF5555")
+            self.after(200, lambda: self.show_message("NO PROFILE FOUND", "Could not auto-detect profiles.\nPlease click [ BROWSE ] and select your PlayerData folder manually.", "#FF5555"))
 
     def load_config(self):
         """Load configuration from JSON file or create default."""
@@ -113,14 +113,13 @@ class LumenIcarusEditor(ctk.CTk):
         
         if os.path.exists(self.config_file):
             try:
-                loaded_config = json.load(open(self.config_file, 'r'))
+                with open(self.config_file, 'r', encoding='utf-8') as f:
+                    loaded_config = json.load(f)
                 # Ensure required keys exist in loaded config
-                if "max_backups" not in loaded_config:
-                    loaded_config["max_backups"] = 10
-                if "close_on_launch" not in loaded_config:
-                    loaded_config["close_on_launch"] = False
+                loaded_config.setdefault("max_backups", 10)
+                loaded_config.setdefault("close_on_launch", False)
                 return loaded_config
-            except:
+            except (json.JSONDecodeError, IOError, OSError):
                 return default_config
         return default_config
 
@@ -141,10 +140,15 @@ class LumenIcarusEditor(ctk.CTk):
         base_path = os.path.join(appdata, 'Icarus', 'Saved', 'PlayerData')
         profiles = {}
         if os.path.exists(base_path):
-            for folder in os.listdir(base_path):
-                full_path = os.path.join(base_path, folder)
-                if os.path.isdir(full_path) and folder.isdigit():
-                    profiles[folder] = full_path
+            try:
+                # Use listdir with error handling for better performance
+                for folder in os.listdir(base_path):
+                    if folder.isdigit():
+                        full_path = os.path.join(base_path, folder)
+                        if os.path.isdir(full_path):
+                            profiles[folder] = full_path
+            except (PermissionError, OSError):
+                pass
         return profiles
 
     def browse_folder(self):
@@ -194,7 +198,7 @@ class LumenIcarusEditor(ctk.CTk):
         self.settings_tab = self.tab_view.add("SETTINGS")
         
         # --- EDITOR TAB CONTENT ---
-        self.frame = ctk.CTkFrame(self.editor_tab, corner_radius=0, fg_color="transparent")
+        self.frame = ctk.CTkScrollableFrame(self.editor_tab, corner_radius=0, fg_color="transparent")
         self.frame.pack(fill="both", expand=True)
         
         # --- SETTINGS TAB CONTENT ---
@@ -545,7 +549,7 @@ class LumenIcarusEditor(ctk.CTk):
         ctk.CTkFrame(container, width=3, height=18, fg_color=COL_ACCENT_GOLD, corner_radius=0).pack(side="left")
         ctk.CTkLabel(container, text=f"CHARACTER: {name}", font=("Arial", 16, "bold"), text_color=COL_TEXT_LIGHT).pack(side="left", padx=10)
         
-        if self.parsed_chars:
+        if len(self.parsed_chars) > 1:  # Only show dropdown if multiple characters
             char_names = [c['obj'].get('CharacterName', 'UNKNOWN').upper() for c in self.parsed_chars]
             sel_container = ctk.CTkFrame(container, fg_color="transparent")
             sel_container.pack(side="right")
@@ -828,10 +832,8 @@ class LumenIcarusEditor(ctk.CTk):
             progress_val = (current_xp - xp_start_of_lvl) / range_span
             progress_val = max(0.0, min(1.0, progress_val))
             
-            self.progress_bar_ref.set(0)
-            self.progress_bar_ref.update_idletasks()
+            # Optimized: single update instead of multiple
             self.progress_bar_ref.set(progress_val)
-            self.progress_bar_ref.update_idletasks()
             pct = int(progress_val * 100)
             self.progress_label_ref.configure(text=f"LEVEL {current_lvl}  >>  {pct}%  >>  LEVEL {current_lvl + 1}")
         except Exception as e:
@@ -847,29 +849,23 @@ class LumenIcarusEditor(ctk.CTk):
                 with open(p_path, 'r', encoding='utf-8') as f: self.profile_data = json.load(f)
                 meta = self.profile_data.get("MetaResources", [])
                 
-                # POINT WALLET (Respec Points)
+                # POINT WALLET (Respec Points) - Optimized single pass
                 self.add_section_header("POINT WALLET")
                 point_config = {"Refund": {"label": "RESPEC POINTS", "color": C_REF}}
-                added_point_labels = []
-                for item in meta:
-                    key = item.get("MetaRow")
-                    if key in point_config:
-                        conf = point_config[key]
-                        if conf["label"] not in added_point_labels: self.add_input_field(conf["label"], key, item.get("Count", 0), "PROFILE", icon_color=conf["color"]); added_point_labels.append(conf["label"])
+                # Build dict of existing items for faster lookup
+                meta_dict = {item.get("MetaRow"): item.get("Count", 0) for item in meta}
                 for key, conf in point_config.items():
-                    if conf["label"] not in added_point_labels: self.add_input_field(conf["label"], key, 0, "PROFILE_NEW", icon_color=conf["color"]); added_point_labels.append(conf["label"])
+                    value = meta_dict.get(key, 0)
+                    section = "PROFILE" if key in meta_dict else "PROFILE_NEW"
+                    self.add_input_field(conf["label"], key, value, section, icon_color=conf["color"])
                 
-                # ACCOUNT WALLET (Currencies)
+                # ACCOUNT WALLET (Currencies) - Optimized single pass
                 self.add_section_header("ACCOUNT WALLET")
                 currency_config = {"Credits": {"label": "REN", "color": C_REN}, "Exotic1": {"label": "EXOTICS", "color": C_EXO}, "Exotic_Red": {"label": "STABILIZED", "color": C_RED}, "Biomass": {"label": "LEGENDARY BIOMASS", "color": C_BIO}, "licence": {"label": "LEGENDARY LICENSE", "color": C_LIC}}
-                added_currency_labels = []
-                for item in meta:
-                    key = item.get("MetaRow")
-                    if key in currency_config:
-                        conf = currency_config[key]
-                        if conf["label"] not in added_currency_labels: self.add_input_field(conf["label"], key, item.get("Count", 0), "PROFILE", icon_color=conf["color"]); added_currency_labels.append(conf["label"])
                 for key, conf in currency_config.items():
-                    if conf["label"] not in added_currency_labels: self.add_input_field(conf["label"], key, 0, "PROFILE_NEW", icon_color=conf["color"]); added_currency_labels.append(conf["label"])
+                    value = meta_dict.get(key, 0)
+                    section = "PROFILE" if key in meta_dict else "PROFILE_NEW"
+                    self.add_input_field(conf["label"], key, value, section, icon_color=conf["color"])
             except Exception as e: self.show_message("ERROR", f"Failed to load Profile:\n{e}", "#FF5555")
         
         c_path = os.path.join(self.current_folder_path, 'Characters.json')
@@ -893,20 +889,26 @@ class LumenIcarusEditor(ctk.CTk):
                 self.parsed_chars = []
                 
                 if target_list:
+                    # Optimized character parsing - single pass with early exits
                     for item in target_list:
                         real_item = item
-                        is_nested = False
-                        if isinstance(item, list) and len(item) > 0:
+                        is_nested = isinstance(item, list) and len(item) > 0
+                        if is_nested:
                             real_item = item[0]
-                            is_nested = True
                         
-                        char_obj = {}
+                        char_obj = None
                         is_encoded = False
+                        
                         if isinstance(real_item, str):
-                            try: char_obj = json.loads(real_item); is_encoded = True
-                            except: pass
+                            try:
+                                char_obj = json.loads(real_item)
+                                is_encoded = True
+                            except (json.JSONDecodeError, TypeError):
+                                continue
                         elif isinstance(real_item, dict):
                             char_obj = real_item
+                        else:
+                            continue
                         
                         if char_obj:
                             self.parsed_chars.append({
@@ -923,6 +925,10 @@ class LumenIcarusEditor(ctk.CTk):
                     self.active_char_index = -1
 
             except Exception as e: self.show_message("ERROR", f"Failed to load Characters:\n{e}", "#FF5555")
+        
+        # Single UI update after all widgets are created for better performance
+        self.update_idletasks()
+        
         self.status_label.configure(text=f"CONNECTED: {os.path.basename(self.current_folder_path)}", text_color=C_BIO)
 
     def save_data(self):
@@ -952,16 +958,26 @@ class LumenIcarusEditor(ctk.CTk):
             if os.path.exists(p_path):
                 shutil.copy(p_path, p_path + ".backup") 
                 meta = self.profile_data.get("MetaResources", [])
+                # Optimized: Build dict for O(1) lookup instead of O(n) loop
+                meta_dict = {item["MetaRow"]: item for item in meta}
+                new_items = []
+                
                 for key_full, entry in list(self.entries.items()):
-                    section, r_key = key_full.split("|")
-                    try: val = int(entry.get())
-                    except: continue
-                    if section == "PROFILE":
-                        for item in meta:
-                            if item["MetaRow"] == r_key: item["Count"] = val
-                    elif section == "PROFILE_NEW" and val > 0: meta.append({"MetaRow": r_key, "Count": val})
-                self.profile_data["MetaResources"] = meta
-                with open(p_path, 'w', encoding='utf-8') as f: json.dump(self.profile_data, f, indent=4)
+                    section, r_key = key_full.split("|", 1)
+                    try: 
+                        val = int(entry.get())
+                    except (ValueError, AttributeError): 
+                        continue
+                    
+                    if section == "PROFILE" and r_key in meta_dict:
+                        meta_dict[r_key]["Count"] = val
+                    elif section == "PROFILE_NEW" and val > 0:
+                        new_items.append({"MetaRow": r_key, "Count": val})
+                
+                # Rebuild meta list with updated values and new items
+                self.profile_data["MetaResources"] = list(meta_dict.values()) + new_items
+                with open(p_path, 'w', encoding='utf-8') as f: 
+                    json.dump(self.profile_data, f, indent=4)
             c_path = os.path.join(self.current_folder_path, 'Characters.json')
             if self.char_root_container is not None and os.path.exists(c_path) and self.active_char_index >= 0:
                 shutil.copy(c_path, c_path + ".backup")
@@ -970,10 +986,10 @@ class LumenIcarusEditor(ctk.CTk):
                 char_obj = char_data['obj']
                 
                 for key_full, entry in list(self.entries.items()):
-                    section, r_key = key_full.split("|")
+                    section, r_key = key_full.split("|", 1)
                     if section == "CHAR":
                         try: char_obj[r_key] = int(entry.get())
-                        except: pass
+                        except (ValueError, AttributeError): pass
                 
                 final_element = char_obj
                 if char_data['is_encoded']: final_element = json.dumps(char_obj)
@@ -1021,16 +1037,26 @@ class LumenIcarusEditor(ctk.CTk):
             if os.path.exists(p_path):
                 shutil.copy(p_path, p_path + ".backup") 
                 meta = self.profile_data.get("MetaResources", [])
+                # Optimized: Build dict for O(1) lookup instead of O(n) loop
+                meta_dict = {item["MetaRow"]: item for item in meta}
+                new_items = []
+                
                 for key_full, entry in list(self.entries.items()):
-                    section, r_key = key_full.split("|")
-                    try: val = int(entry.get())
-                    except: continue
-                    if section == "PROFILE":
-                        for item in meta:
-                            if item["MetaRow"] == r_key: item["Count"] = val
-                    elif section == "PROFILE_NEW" and val > 0: meta.append({"MetaRow": r_key, "Count": val})
-                self.profile_data["MetaResources"] = meta
-                with open(p_path, 'w', encoding='utf-8') as f: json.dump(self.profile_data, f, indent=4)
+                    section, r_key = key_full.split("|", 1)
+                    try: 
+                        val = int(entry.get())
+                    except (ValueError, AttributeError): 
+                        continue
+                    
+                    if section == "PROFILE" and r_key in meta_dict:
+                        meta_dict[r_key]["Count"] = val
+                    elif section == "PROFILE_NEW" and val > 0:
+                        new_items.append({"MetaRow": r_key, "Count": val})
+                
+                # Rebuild meta list with updated values and new items
+                self.profile_data["MetaResources"] = list(meta_dict.values()) + new_items
+                with open(p_path, 'w', encoding='utf-8') as f: 
+                    json.dump(self.profile_data, f, indent=4)
             
             c_path = os.path.join(self.current_folder_path, 'Characters.json')
             if self.char_root_container is not None and os.path.exists(c_path) and self.active_char_index >= 0:
@@ -1040,10 +1066,10 @@ class LumenIcarusEditor(ctk.CTk):
                 char_obj = char_data['obj']
                 
                 for key_full, entry in list(self.entries.items()):
-                    section, r_key = key_full.split("|")
+                    section, r_key = key_full.split("|", 1)
                     if section == "CHAR":
                         try: char_obj[r_key] = int(entry.get())
-                        except: pass
+                        except (ValueError, AttributeError): pass
                 
                 final_element = char_obj
                 if char_data['is_encoded']: final_element = json.dumps(char_obj)
